@@ -26,12 +26,12 @@ class PlaylistInfo extends DataModel {
   Future<void> addSong({required final SongInfo song}) async {
     print("adding song ${song.id} to playlist ${this.id}");
 
-    List<dynamic> updatedData = await (FlutterAudioQuery.channel.invokeMethod("addSongToPlaylist", {
+    List<dynamic> updatedData = await FlutterAudioQuery.channel.invokeMethod("addSongToPlaylist", {
       FlutterAudioQuery.SOURCE_KEY: FlutterAudioQuery.SOURCE_PLAYLIST,
       FlutterAudioQuery.PLAYLIST_METHOD_TYPE: PlayListMethodType.WRITE.index,
       "playlist_id": this.id,
       "song_id": song.id
-    }) as Future<List<dynamic>>);
+    });
 
     PlaylistInfo data = PlaylistInfo._(updatedData[0]);
     this._updatePlaylistData(data);
@@ -39,12 +39,12 @@ class PlaylistInfo extends DataModel {
 
   /// This method removes a specified [song] from this playlist.
   Future<void> removeSong({required SongInfo song}) async {
-    List<dynamic> updatedPlaylist = await (FlutterAudioQuery.channel.invokeMethod("removeSongFromPlaylist", {
+    List<dynamic> updatedPlaylist = await FlutterAudioQuery.channel.invokeMethod("removeSongFromPlaylist", {
       FlutterAudioQuery.SOURCE_KEY: FlutterAudioQuery.SOURCE_PLAYLIST,
       FlutterAudioQuery.PLAYLIST_METHOD_TYPE: PlayListMethodType.WRITE.index,
       "playlist_id": this.id,
       "song_id": song.id,
-    }) as Future<List<dynamic>>);
+    });
 
     PlaylistInfo data = PlaylistInfo._(updatedPlaylist[0]);
     this._updatePlaylistData(data);
@@ -63,13 +63,13 @@ class PlaylistInfo extends DataModel {
   ///
   void moveSong({required int from, required int to}) async {
     if ((from >= 0 && from < (this._memberIds!.length)) && (to >= 0 && to < (this._memberIds!.length))) {
-      List<dynamic> updatedPlaylist = await (FlutterAudioQuery.channel.invokeMethod("moveSong", {
+      List<dynamic> updatedPlaylist = await FlutterAudioQuery.channel.invokeMethod("moveSong", {
         FlutterAudioQuery.SOURCE_KEY: FlutterAudioQuery.SOURCE_PLAYLIST,
         FlutterAudioQuery.PLAYLIST_METHOD_TYPE: PlayListMethodType.WRITE.index,
         "playlist_id": this.id,
         "from": from,
         "to": to,
-      }) as Future<List<dynamic>>);
+      });
 
       PlaylistInfo data = PlaylistInfo._(updatedPlaylist[0]);
       this._updatePlaylistData(data);
